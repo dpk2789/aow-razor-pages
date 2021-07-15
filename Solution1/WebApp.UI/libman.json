@@ -1,0 +1,14 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "twitter-bootstrap@5.0.1",
+      "destination": "wwwroot/twitter-bootstrap/"
+    }
+  ],
+  "Stripe": {
+    "PublicKey": "pk_test_9lbJEYmCxlz0Odo9qNkMb7xp",
+    "SecretKey": "sk_test_RzahXJ7Ea5P0aqQwiReVarOy"
+  }
+}

@@ -1,0 +1,156 @@
+﻿@page
+@model WebApp.UI.Pages.CartModel
+@{
+}
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-content padding-y">
+    <div class="container">
+
+        <div class="row">
+            <partial name="_CartPartial" model="@Model" />
+        </div>
+
+    </div> <!-- container .//  -->
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
+<!-- ========================= SECTION  ========================= -->
+<section class="section-name bg padding-y">
+    <div class="container">
+        <h6>Payment and refund policy</h6>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </p>
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </p>
+
+    </div><!-- container // -->
+</section>
+<!-- ========================= SECTION  END// ========================= -->
+
+
+@section scripts {
+
+    <script>
+        var formData = {
+            "productId": "",
+            "qty": 1,
+            "value": 0,
+            "userId": ""
+        }
+        // var apiUrl = "https://localhost:44347";
+       // var apiUrl = "http://api.robustpackagingeshop.com";
+       var apiUrl = '@Model.ApiUrl';
+        var addOneToCartSession = function (e) {
+            let productId = e.target.dataset.productId;
+            let quantity = e.target.dataset.quantity;
+            this.formData.productId = productId;
+            this.formData.qty = parseInt(quantity);
+
+            axios({
+                url: "/UserAccount/AddOneProductToCartSession",
+                method: "post",
+                data: this.formData,
+                headers: {
+                    'Content-Type': "application/json"
+                }
+            }).then(res => {
+                console.log(res.data);
+                updateCart();
+            })
+                .catch(err => {
+                    alert(err.error);
+                })
+        }
+
+        var removeOneFromCartSession = function (e) {
+            let productId = e.target.dataset.productId;
+            let quantity = e.target.dataset.quantity;
+            this.formData.productId = productId;
+            this.formData.qty = parseInt(quantity);
+            axios({
+                url: "/UserAccount/RemoveOneProductToCartSession",
+                method: "post",
+                data: this.formData,
+                headers: {
+                    'Content-Type': "application/json"
+                }
+            })
+                .then(res => {
+                    console.log(res.data);
+                    updateCart();
+                })
+                .catch(err => {
+                    alert(err.error);
+                })
+        }
+
+        var removeProductFromCartSession = function (e) {
+
+            let productId = e.target.dataset.productId;
+            axios.post("/UserAccount/RemoveProductToCartSession/?id=" + productId,)
+                .then(res => {
+                    updateCart();
+                })
+                .catch(err => {
+                    alert(err.error);
+                })
+        }
+
+        var addOneToCart = function (e) {
+
+            let productId = e.target.dataset.productId;
+            let userName = e.target.dataset.userId;
+            this.formData.productId = productId;
+            this.formData.userid = userName;
+
+            axios.post(apiUrl + "/api/Cart/AddOneToCart", this.formData)
+                .then(res => {
+                    console.log(res.data);
+                    updateCart();
+                })
+                .catch(err => {
+                    alert(err.error);
+                })
+        }
+
+        var updateCart = function () {
+
+            axios.get('/UserAccount/GetCartPartialView')
+                .then(res => {
+                    var html = res.data;
+                    var el = document.getElementById('cart-main');
+
+                    el.outerHTML = html;
+                })
+        }
+
+        var removeFromCart = function (e) {
+
+            let productId = e.target.dataset.productId;
+            let userName = e.target.dataset.userId;
+            this.formData.productId = productId;
+            this.formData.userid = userName;
+
+            axios.post(apiUrl + "/api/Cart/RemoveProduct", this.formData)
+                .then(res => {
+                    updateCart();
+                })
+                .catch(err => {
+                    alert(err.error);
+                })
+        }
+
+
+    </script>
+}
